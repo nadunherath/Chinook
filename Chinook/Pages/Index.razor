@@ -3,6 +3,9 @@
 
 @using Chinook.Models
 @using Microsoft.EntityFrameworkCore
+@using Chinook.ClientModels
+@using Chinook.Interfaces
+@using Chinook.Repositories
 
 <PageTitle>Index</PageTitle>
 
@@ -34,25 +37,32 @@ else
 }
 
 @code {
-    private List<Artist> Artists;
-    [Inject] IDbContextFactory<ChinookContext> DbFactory { get; set; }
+    private List<ArtistViewModel> Artists;
+    private List<PlayListViewModel> PlayLists;
+    [Inject] IArtistRepository ArtistRepository { get; set; }
+    [Inject] IPlayListRepository PlayListRepository { get; set; }
 
     protected override async Task OnInitializedAsync() {
         await InvokeAsync(StateHasChanged);
-        Artists = await GetArtists();
+        Artists = await ArtistRepository.GetArtistsAsync();
+        PlayLists = await PlayListRepository.GetPlayListAsync();
+        if (!PlayLists.Any(x => x.Name.Contains("My favorite tracks")))
+        {
+            PlayListRepository.AddPlayListAsync(new PlayListViewModel{Name = "My favorite tracks"});
+        }
     }
 
-    public async Task<List<Artist>> GetArtists()
-    {   
-        var dbContext = await DbFactory.CreateDbContextAsync();
-        var users = dbContext.Users.Include(a => a.UserPlaylists).ToList();
+    //public async Task<List<Artist>> GetArtists()
+    //{   
+    //    var dbContext = await DbFactory.CreateDbContextAsync();
+    //    var users = dbContext.Users.Include(a => a.UserPlaylists).ToList();
         
-        return dbContext.Artists.ToList();
-    }
+    //    return dbContext.Artists.ToList();
+    //}
 
-    public async Task<List<Album>> GetAlbumsForArtist(int artistId)
-    {
-        var dbContext = await DbFactory.CreateDbContextAsync();
-        return dbContext.Albums.Where(a => a.ArtistId == artistId).ToList();
-    }
+    //public async Task<List<Album>> GetAlbumsForArtist(int artistId)
+    //{
+    //    var dbContext = await DbFactory.CreateDbContextAsync();
+    //    return dbContext.Albums.Where(a => a.ArtistId == artistId).ToList();
+    //}
 }
