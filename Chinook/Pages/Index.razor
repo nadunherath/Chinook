@@ -17,6 +17,8 @@
 }
 else
 {
+    <input type="text" name=“search” size="50" maxlength="45" @bind="inputText" @onkeydown="@HandleKeyPress" />
+    <button type="button" @onclick="@SearchClick">Search</button>
     <table class="table table-striped table-hover table-sm">
         <thead>
             <tr>
@@ -41,6 +43,7 @@ else
     private List<PlayListViewModel> PlayLists;
     [Inject] IArtistRepository ArtistRepository { get; set; }
     [Inject] IPlayListRepository PlayListRepository { get; set; }
+    private string inputText = "";
 
     protected override async Task OnInitializedAsync() {
         await InvokeAsync(StateHasChanged);
@@ -50,6 +53,22 @@ else
         {
             PlayListRepository.AddPlayListAsync(new PlayListViewModel{Name = "My favorite tracks"});
         }
+    }
+
+    public async Task HandleKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            string enteredText = inputText;
+            Artists = await  ArtistRepository.GetArtistsAsync(enteredText);
+            inputText = "";
+        }
+    }
+
+    private async Task SearchClick()
+    {
+        string enteredText = inputText;
+        Artists = await  ArtistRepository.GetArtistsAsync(enteredText);
     }
 
     //public async Task<List<Artist>> GetArtists()

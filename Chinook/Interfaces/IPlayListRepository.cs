@@ -9,5 +9,7 @@ namespace Chinook.Interfaces
         Task<List<PlayListViewModel>> GetPlayListAsync();
 
         void AddPlayListAsync(PlayListViewModel playList);
+
+        Task<List<PlayListViewModel>> GetPlayListByUserIdAsync(string userId);
     }
 }

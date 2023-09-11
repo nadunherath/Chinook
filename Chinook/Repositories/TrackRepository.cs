@@ -18,9 +18,17 @@ namespace Chinook.Repositories
         
         public async Task<List<TrackViewModel>> GetTracksByArtistId(long artistId)
         {
-            var tracks = await _context.Tracks.Include( x => x.Album.Artist).Where(x => x.Album.ArtistId == artistId).ToListAsync();
-            var trackViewModels = _mapper.Map<List<TrackViewModel>>(tracks);
-            return trackViewModels;
+            try
+            {
+                var tracks = await _context.Tracks.Include(x => x.Album.Artist).Where(x => x.Album.ArtistId == artistId).ToListAsync();
+                var trackViewModels = _mapper.Map<List<TrackViewModel>>(tracks);
+                return trackViewModels;
+            }
+            catch (Exception ex)
+            {
+                //show error message
+            }
+            return new List<TrackViewModel>();
         }
     }
 }

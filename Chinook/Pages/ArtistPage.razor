@@ -66,14 +66,18 @@ else
     //[Inject] IDbContextFactory<ChinookContext> DbFactory { get; set; }
     [Inject] IArtistRepository ArtistRepository { get; set; }
     [Inject] ITrackRepository TrackRepository { get; set; }
-    private Modal PlaylistDialog { get; set; }
+    [Inject] IPlayListRepository PlayListRepository { get; set; }
 
+    private Modal PlaylistDialog { get; set; }
     private ArtistViewModel Artist;
     private List<TrackViewModel> Tracks;
-    //private DbContext DbContext;
     private TrackViewModel SelectedTrack;
     private string InfoMessage;
     private string CurrentUserId;
+    
+    private List<PlayListViewModel> UserPlayList;
+    string playListName;
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -82,8 +86,11 @@ else
         //var DbContext = await DbFactory.CreateDbContextAsync();
 
         Artist = await ArtistRepository.GetArtistById(ArtistId); //   DbContext.Artists.SingleOrDefault(a => a.ArtistId == ArtistId);
-
         Tracks = await TrackRepository.GetTracksByArtistId(ArtistId);
+        UserPlayList = await PlayListRepository.GetPlayListByUserIdAsync(CurrentUserId);
+
+
+
         //.Include(a => a.Album)
         //.Select(t => new PlaylistTrackViewModel()
         //    {
@@ -125,6 +132,9 @@ else
     {
         CloseInfoMessage();
         InfoMessage = $"Track {Artist.Name} - {SelectedTrack.Album.Title} - {SelectedTrack.Name} added to playlist {{playlist name}}.";
+        PlayListViewModel playListViewModel = new PlayListViewModel(){Name = playListName};
+        playListViewModel.UserPlayLists.Add(new UserPlayListModel(){  UserId = CurrentUserId});
+        PlayListRepository.AddPlayListAsync(playListViewModel);
         PlaylistDialog.Close();
     }
 
@@ -151,17 +161,30 @@ else
         <div class="form-group mb-2">
             <label for="ExistingPlaylist">Add to existing playlist</label>
             <select class="form-control" id="ExistingPlaylist">
-                <option>Playlist 1</option>
-                <option>Playlist 2</option>
-                <option>Playlist 3</option>
+                @foreach (var playListView in UserPlayList)
+                {
+                    <option value="@playListView.PlaylistId">@playListView.Name</option>
+                }
             </select>
         </div>
         <div class="form-group mb-2">
             <label for="NewPlaylist">Create new playlist</label>
-            <input type="text" id="NewPlaylist" class="form-control" placeholder="Name for the new playlist">
+            <input type="text" id="NewPlaylist" class="form-control" @bind="playListName" placeholder="Name for the new playlist">
         </div>
     </Body>
     <Footer>
         <button class="btn btn-success" @onclick="AddTrackToPlaylist">Save</button>
     </Footer>
 </Modal>
+
+@code
+{
+    //[Inject] IPlayListRepository PlayListRepository { get; set; }
+    //private List<TrackViewModel> UserTracks;
+    //protected override async Task OnInitializedAsync()
+    //{
+    //}
+
+
+
+}

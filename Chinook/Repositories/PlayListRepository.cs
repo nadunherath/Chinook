@@ -17,19 +17,60 @@ namespace Chinook.Repositories
             _mapper = mapper;
         }
 
-
         public async Task<List<PlayListViewModel>> GetPlayListAsync()
         {
-            var playLists = await _context.Playlists.ToListAsync();
-            var playListViewModels = _mapper.Map<List<PlayListViewModel>>(playLists);
-            return playListViewModels;
+            try
+            {
+                var playLists = await _context.Playlists.ToListAsync();
+                var playListViewModels = _mapper.Map<List<PlayListViewModel>>(playLists);
+                return playListViewModels;
+            }
+            catch (Exception ex)
+            {
+                //show error message
+            }
+            return new List<PlayListViewModel>();
         }
 
         public async void AddPlayListAsync(PlayListViewModel playListViewModel)
         {
-            var playList = _mapper.Map<Playlist>(playListViewModel);
-            _context.Playlists.Add(playList);
-            await _context.SaveChangesAsync();
+            try
+            {
+              
+                //if (playListViewModel.UserPlayLists != null)
+                //{
+                //    foreach (var userPlayList in playListViewModel.UserPlayLists)
+                //    {
+                //        var userPlayListModel = _mapper.Map<UserPlaylist>(userPlayList);
+                //        _context.UserPlaylists.Add(userPlayListModel);
+                //    }
+                //}
+                var playList = _mapper.Map<Playlist>(playListViewModel);
+                _context.Playlists.Add(playList);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                //show error message
+            }
+            
         }
+
+        public async Task<List<PlayListViewModel>> GetPlayListByUserIdAsync(string userId)
+        {
+            try
+            {
+                var playLists = await _context.UserPlaylists.Where( x => x.UserId == userId ).Select( x => x.Playlist).ToListAsync();
+                var playListViewModels = _mapper.Map<List<PlayListViewModel>>(playLists);
+                return playListViewModels;
+            }
+            catch (Exception ex)
+            {
+                //show error message
+            }
+            return new List<PlayListViewModel>();
+        }
+
+
     }
 }

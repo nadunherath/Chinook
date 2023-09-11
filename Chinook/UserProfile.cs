@@ -6,7 +6,8 @@ namespace Chinook
     {
         public UserProfile()
         {
-            CreateMap<Models.Playlist, ClientModels.PlayListViewModel>();
+            CreateMap<Models.Playlist, ClientModels.PlayListViewModel>()
+                .ForMember(dest => dest.UserPlayLists , opt => opt.MapFrom(src => src.UserPlaylists));
             CreateMap<Models.Playlist, ClientModels.PlayListViewModel>().ReverseMap();
             CreateMap<Models.Album, ClientModels.AlbumViewModel>();
             CreateMap<Models.Album, ClientModels.AlbumViewModel>().ReverseMap();

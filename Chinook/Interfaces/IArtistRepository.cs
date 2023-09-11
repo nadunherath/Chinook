@@ -4,8 +4,10 @@ namespace Chinook.Interfaces
 {
     public interface IArtistRepository
     {
-        Task<List<ArtistViewModel>> GetArtistsAsync();
+        Task<List<ArtistViewModel>> GetArtistsAsync(string searchText = "");
 
         Task<ArtistViewModel> GetArtistById(long artistId);
+
+
     }
 }
