@@ -83,23 +83,11 @@ else
     {
         await InvokeAsync(StateHasChanged);
         CurrentUserId = await GetUserId();
-        //var DbContext = await DbFactory.CreateDbContextAsync();
-
-        Artist = await ArtistRepository.GetArtistById(ArtistId); //   DbContext.Artists.SingleOrDefault(a => a.ArtistId == ArtistId);
+        
+        Artist = await ArtistRepository.GetArtistById(ArtistId); 
         Tracks = await TrackRepository.GetTracksByArtistId(ArtistId);
         UserPlayList = await PlayListRepository.GetPlayListByUserIdAsync(CurrentUserId);
 
-
-
-        //.Include(a => a.Album)
-        //.Select(t => new PlaylistTrackViewModel()
-        //    {
-        //        AlbumTitle = (t.Album == null ? "-" : t.Album.Title),
-        //        TrackId = t.TrackId,
-        //        TrackName = t.Name,
-        //        IsFavorite = t.Playlists.Where(p => p.UserPlaylists.Any(up => up.UserId == CurrentUserId && up.Playlist.Name == "Favorites")).Any()
-        //    })
-        //.ToList();
     }
 
     private async Task<string> GetUserId()
@@ -177,14 +165,4 @@ else
     </Footer>
 </Modal>
 
-@code
-{
-    //[Inject] IPlayListRepository PlayListRepository { get; set; }
-    //private List<TrackViewModel> UserTracks;
-    //protected override async Task OnInitializedAsync()
-    //{
-    //}
 
-
-
-}

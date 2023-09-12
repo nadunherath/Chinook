@@ -5,7 +5,7 @@
 @using Microsoft.EntityFrameworkCore
 @using Chinook.ClientModels
 @using Chinook.Interfaces
-@using Chinook.Repositories
+
 
 <PageTitle>Index</PageTitle>
 
@@ -71,17 +71,5 @@ else
         Artists = await  ArtistRepository.GetArtistsAsync(enteredText);
     }
 
-    //public async Task<List<Artist>> GetArtists()
-    //{   
-    //    var dbContext = await DbFactory.CreateDbContextAsync();
-    //    var users = dbContext.Users.Include(a => a.UserPlaylists).ToList();
-        
-    //    return dbContext.Artists.ToList();
-    //}
-
-    //public async Task<List<Album>> GetAlbumsForArtist(int artistId)
-    //{
-    //    var dbContext = await DbFactory.CreateDbContextAsync();
-    //    return dbContext.Albums.Where(a => a.ArtistId == artistId).ToList();
-    //}
+    
 }

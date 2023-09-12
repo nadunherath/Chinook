@@ -37,8 +37,7 @@ namespace Chinook.Repositories
             try
             {
               
-               
-                var playList = _mapper.Map<Playlist>(playListViewModel);
+               var playList = _mapper.Map<Playlist>(playListViewModel);
                 _context.Playlists.Add(playList);
                 await _context.SaveChangesAsync();
             }
