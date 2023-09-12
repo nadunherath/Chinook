@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace Chinook
 {
@@ -9,6 +10,8 @@ namespace Chinook
             CreateMap<Models.Playlist, ClientModels.PlayListViewModel>()
                 .ForMember(dest => dest.UserPlayLists , opt => opt.MapFrom(src => src.UserPlaylists));
             CreateMap<Models.Playlist, ClientModels.PlayListViewModel>().ReverseMap();
+            CreateMap<ClientModels.PlayListViewModel,Models.Playlist >()
+                .ForMember( dest => dest.UserPlaylists, opt => opt.MapFrom(src => src.UserPlayLists ));
             CreateMap<Models.Album, ClientModels.AlbumViewModel>();
             CreateMap<Models.Album, ClientModels.AlbumViewModel>().ReverseMap();
             //CreateMap<Models.Artist, ClientModels.ArtistViewModel>();
